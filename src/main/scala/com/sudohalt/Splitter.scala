@@ -28,8 +28,11 @@ object Splitter {
     } else {
       println("Create new root branch...")
       val newRootBranch = branchToSplit.rootBranch + "-copy"
+      val checkoutExitCode = s"git checkout master".!
+      if (checkoutExitCode != 0) err(s"received following error while checking out master before creating new root branch: $checkoutExitCode")
+
       val newRootBranchExitCode = s"git branch ${newRootBranch}".!
-      if (newRootBranchExitCode != 0) err(s"received following error code while creating new root branch: ${newRootBranchExitCode}")
+      if (newRootBranchExitCode != 0) err(s"received following error code while creating new root branch: $newRootBranchExitCode")
       newRootBranch
     }
 
