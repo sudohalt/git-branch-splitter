@@ -85,14 +85,14 @@ object Splitter {
    */
   def udpateSubBranches(branchToSplit: BranchToSplit) {
     branchToSplit.subBranches.asScala.foreach { subBranch =>
-
       if (branchToSplit.againstMaster) {
-        val checkoutMaster = "git checkout master".!
-
+        val checkoutMasterExitCode = "git checkout master".!
+        if (checkoutMasterExitCode != 0) err(s"received following error while checking out master: $checkoutMasterExitCode")
       } else {
         val newRootBranch = branchToSplit.rootBranch + "-copy"
         println("Create new root branch...")
         val checkoutNewRootExitCode = s"git checkout ${newRootBranch}".!
+        if (checkoutNewRootExitCode != 0) err(s"received following error while checking out new root branch: $checkoutNewRootExitCode")
       }
 
       updateSubBranch(branchToSplit.rootBranch, subBranch)
