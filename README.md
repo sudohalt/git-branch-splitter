@@ -9,7 +9,7 @@ This tool was created to simplify code reviews by splitting large branches into 
 ## Usage 
 
 ### Create the sub branches
-```git-branch-splitter create -f file.yml```
+```git-branch-splitter split -f file.yml```
 
 
 ### Update the sub branches
