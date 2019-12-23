@@ -48,3 +48,15 @@ Specifies the root branch to split (root branch will not be affected).
 #### subBranches
 
 List of sub branches to create.  For each sub branch the name of the sub branch (`subBranch`) and the list of the paths to files (`files`) from the root branch that it will take commits from should be specified.
+
+## Build and run
+
+### Building
+```sbt compile assembly```
+
+### Running
+```java -jar <path to jar> <option> -f <yaml file>```
+
+alternatively
+```chmod +x <path to jar>```
+```./<path to jar> <option> -f <yaml file>```
