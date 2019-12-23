@@ -21,6 +21,7 @@ This tool was created to simplify code reviews by splitting large branches into 
 ### Yaml file format
 
 ```
+masterBranch: "master"
 againstMaster: true
 rootBranch: "test" 
 subBranches:
