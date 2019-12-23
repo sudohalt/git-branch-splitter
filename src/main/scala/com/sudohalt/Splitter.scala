@@ -129,7 +129,7 @@ object Splitter {
     if (addFilesToSubBranchExitCode != 0) err(s"received following error code while adding files to commit: $addFilesToSubBranchExitCode")
 
     println("Commit....")
-    val commitFilesExitCode = """git commit -m "Add util file"""".!
+    val commitFilesExitCode = s"""git commit -m "Getting updates from $rootBranch to ${subBranch.subBranch}"""".!
     if (commitFilesExitCode != 0) err(s"received following error code while committing files: $commitFilesExitCode")
 
     println("Push upstream....")
