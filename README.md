@@ -56,7 +56,3 @@ List of sub branches to create.  For each sub branch the name of the sub branch 
 
 ### Running
 ```java -jar <path to jar> <option> -f <yaml file>```
-
-alternatively
-```chmod +x <path to jar>```
-```./<path to jar> <option> -f <yaml file>```
