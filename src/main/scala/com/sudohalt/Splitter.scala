@@ -31,8 +31,12 @@ object Splitter {
       val checkoutExitCode = s"git checkout master".!
       if (checkoutExitCode != 0) err(s"received following error while checking out master before creating new root branch: $checkoutExitCode")
 
-      val newRootBranchExitCode = s"git branch ${newRootBranch}".!
+      val newRootBranchExitCode = s"git branch $newRootBranch".!
       if (newRootBranchExitCode != 0) err(s"received following error code while creating new root branch: $newRootBranchExitCode")
+
+      val pushNewBranchExitCode = s"git push origin $newRootBranch".!
+      if (pushNewBranchExitCode != 0) err(s"received following error code while pushing new root branch: $pushNewBranchExitCode")
+
       newRootBranch
     }
 
