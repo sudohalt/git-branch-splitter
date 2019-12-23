@@ -16,6 +16,12 @@ object Splitter {
   }
 
   /**
+   * When `againstMaster` is set to `false`, this is used to retrieve the name of the new
+   * branch to make changes against.
+   */
+  def newRootBranch(branchToSplit: BranchToSplit): String = branchToSplit.rootBranch + "-copy"
+
+  /**
    * Create sub branches against master or new root branch.  For each sub branch
    * this method will get all the commits for each file it is tracking from the
    * root branch.
@@ -27,17 +33,16 @@ object Splitter {
       "master"
     } else {
       println("Create new root branch...")
-      val newRootBranch = branchToSplit.rootBranch + "-copy"
       val checkoutExitCode = s"git checkout master".!
       if (checkoutExitCode != 0) err(s"received following error while checking out master before creating new root branch: $checkoutExitCode")
 
-      val newRootBranchExitCode = s"git branch $newRootBranch".!
+      val newRootBranchExitCode = s"git branch ${newRootBranch(branchToSplit)}".!
       if (newRootBranchExitCode != 0) err(s"received following error code while creating new root branch: $newRootBranchExitCode")
 
-      val pushNewBranchExitCode = s"git push origin $newRootBranch".!
+      val pushNewBranchExitCode = s"git push origin ${newRootBranch(branchToSplit)}".!
       if (pushNewBranchExitCode != 0) err(s"received following error code while pushing new root branch: $pushNewBranchExitCode")
 
-      newRootBranch
+      newRootBranch(branchToSplit)
     }
 
     branchToSplit.subBranches.asScala.foreach { subBranch =>
@@ -139,6 +144,9 @@ object Splitter {
    * @param branchToSplit Object containing details about the sub branches to delete.
    */
   def deleteSubBranches(branchToSplit: BranchToSplit) {
+    val checkoutMasterExitCode = "git checkout master".!
+    if (checkoutMasterExitCode != 0) err(s"received following error while checking out master: $checkoutMasterExitCode")
+
     branchToSplit.subBranches.asScala.foreach { subBranch =>
       println(s"deleting local branch ${subBranch.subBranch}")
       val deleteLocalBranchExitCode = s"git branch --delete ${subBranch.subBranch}".!
@@ -147,6 +155,16 @@ object Splitter {
       println(s"deleting remote branch ${subBranch.subBranch}")
       val deleteRemoteBranchExitCode = s"git push origin --delete ${subBranch.subBranch}".!
       if (deleteRemoteBranchExitCode != 0) err(s"received following error code while deleting remote branch ${subBranch.subBranch}: $deleteRemoteBranchExitCode")
+    }
+
+    if (!branchToSplit.againstMaster) {
+      println(s"deleting local branch ${newRootBranch(branchToSplit)}")
+      val deleteLocalBranchExitCode = s"git branch --delete ${newRootBranch(branchToSplit)}".!
+      if (deleteLocalBranchExitCode != 0) err(s"received following error code while deleting local branch ${newRootBranch(branchToSplit)}: $deleteLocalBranchExitCode")
+
+      println(s"deleting remote branch ${newRootBranch(branchToSplit)}")
+      val deleteRemoteBranchExitCode = s"git push origin --delete ${newRootBranch(branchToSplit)}".!
+      if (deleteRemoteBranchExitCode != 0) err(s"received following error code while deleting remote branch ${newRootBranch(branchToSplit)}: $deleteRemoteBranchExitCode")
     }
   }
 
