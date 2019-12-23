@@ -12,6 +12,7 @@ class SubBranch {
 }
 
 class BranchToSplit {
+  @BeanProperty var masterBranch: String = _
   @BeanProperty var againstMaster: Boolean = _
   @BeanProperty var rootBranch: String = _
   @BeanProperty var subBranches = new java.util.ArrayList[SubBranch]()

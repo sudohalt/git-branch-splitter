@@ -30,11 +30,11 @@ object Splitter {
    */
   def createAllSubBranches(branchToSplit: BranchToSplit) {
     val branchToCheckout = if (branchToSplit.againstMaster) {
-      "master"
+      branchToSplit.masterBranch
     } else {
       println("Create new root branch...")
-      val checkoutExitCode = s"git checkout master".!
-      if (checkoutExitCode != 0) err(s"received following error while checking out master before creating new root branch: $checkoutExitCode")
+      val checkoutExitCode = s"git checkout ${branchToSplit.masterBranch}".!
+      if (checkoutExitCode != 0) err(s"received following error while checking out master (${branchToSplit.masterBranch}) before creating new root branch: $checkoutExitCode")
 
       val newRootBranchExitCode = s"git branch ${newRootBranch(branchToSplit)}".!
       if (newRootBranchExitCode != 0) err(s"received following error code while creating new root branch: $newRootBranchExitCode")
@@ -95,8 +95,8 @@ object Splitter {
   def udpateSubBranches(branchToSplit: BranchToSplit) {
     branchToSplit.subBranches.asScala.foreach { subBranch =>
       if (branchToSplit.againstMaster) {
-        val checkoutMasterExitCode = "git checkout master".!
-        if (checkoutMasterExitCode != 0) err(s"received following error while checking out master: $checkoutMasterExitCode")
+        val checkoutMasterExitCode = s"git checkout ${branchToSplit.masterBranch}".!
+        if (checkoutMasterExitCode != 0) err(s"received following error while checking out master (${branchToSplit.masterBranch}): $checkoutMasterExitCode")
       } else {
         val newRootBranch = branchToSplit.rootBranch + "-copy"
         println("Create new root branch...")
@@ -144,8 +144,8 @@ object Splitter {
    * @param branchToSplit Object containing details about the sub branches to delete.
    */
   def deleteSubBranches(branchToSplit: BranchToSplit) {
-    val checkoutMasterExitCode = "git checkout master".!
-    if (checkoutMasterExitCode != 0) err(s"received following error while checking out master: $checkoutMasterExitCode")
+    val checkoutMasterExitCode = s"git checkout ${branchToSplit.masterBranch}".!
+    if (checkoutMasterExitCode != 0) err(s"received following error while checking out master (${branchToSplit.masterBranch}): $checkoutMasterExitCode")
 
     branchToSplit.subBranches.asScala.foreach { subBranch =>
       println(s"deleting local branch ${subBranch.subBranch}")
