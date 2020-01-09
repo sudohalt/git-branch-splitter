@@ -130,11 +130,13 @@ object Splitter {
 
     println("Commit....")
     val commitFilesExitCode = s"""git commit -m "Getting updates from $rootBranch to ${subBranch.subBranch}"""".!
-    if (commitFilesExitCode != 0) err(s"received following error code while committing files: $commitFilesExitCode")
-
-    println("Push upstream....")
-    val pushExitCode = s"git push --set-upstream origin ${subBranch.subBranch}".!
-    if (pushExitCode != 0) err(s"received following error code while pushing upstream: $pushExitCode")
+    if (commitFilesExitCode != 0) {
+      println("nothing to commit")
+    } else {
+      println("Push upstream....")
+      val pushExitCode = s"git push --set-upstream origin ${subBranch.subBranch}".!
+      if (pushExitCode != 0) err(s"received following error code while pushing upstream: $pushExitCode")
+    }
 
   }
 
